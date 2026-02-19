@@ -136,7 +136,6 @@ const GraphicApp: React.FC = () => {
       onMouseMove={handleGlobalMouseMove}
       className="w-full h-screen bg-brand-bg relative overflow-hidden select-none"
     >
-      {/* 데이터가 없을 때의 안내 문구 */}
       {items.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="text-[#E2E2E2] text-[13px] font-pretendard animate-pulse tracking-widest">
