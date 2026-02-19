@@ -92,6 +92,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
         transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)'
       };
 
+  // Determine width based on state and platform
+  const getWidth = () => {
+    if (!isExpanded) return '3px';
+    if (isProjectDetail) return '64px'; // Unified compact width for project detail
+    if (isMobile) return 'calc(100vw - 30px)';
+    return '420px'; // Default expanded width for desktop
+  };
+
   return (
     <nav 
       className="fixed top-0 left-0 w-full z-[100] flex flex-col items-center pointer-events-auto"
@@ -109,11 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
         style={{
           ...containerStyle,
           marginTop: isExpanded ? (isMobile ? '60px' : '32px') : '0',
-          width: isExpanded 
-            ? (isMobile 
-                ? (isProjectDetail ? '64px' : 'calc(100vw - 30px)') 
-                : '420px') 
-            : '3px'
+          width: getWidth()
         }}
       >
         <div className={`
@@ -122,11 +126,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
             ? 'opacity-100 translate-y-0 duration-500 delay-[1000ms]' 
             : 'opacity-0 translate-y-2 duration-200 delay-0 pointer-events-none'}
         `}>
-          {isMobile && isProjectDetail ? (
+          {isProjectDetail ? (
             <div className="flex items-center justify-center w-full">
               <button 
                 onClick={onBack}
-                className="flex items-center justify-center text-brand-orange"
+                className="flex items-center justify-center text-brand-orange hover:scale-110 transition-transform duration-300"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
