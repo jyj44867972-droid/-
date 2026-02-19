@@ -4,14 +4,14 @@ import ProjectDetail from './ProjectDetail';
 import { client, urlFor } from '../sanity';
 
 export interface ProjectItem {
-  id: string;
+  _id: string;
   number: string;
   title: string;
   description: string;
   longDescription: string;
   aspectRatio: string;
-  imgUrl: string;
-  gallery: string[];
+  mainImage: string;
+  images: string[];
 }
 
 const ProjectCard: React.FC<{ 
@@ -49,7 +49,7 @@ const ProjectCard: React.FC<{
   return (
     <div 
       ref={cardRef}
-      onClick={() => onSelect(project.id)}
+      onClick={() => onSelect(project._id)}
       className={`group flex flex-col h-full shrink-0 cursor-pointer transition-all duration-[1000ms] cubic-bezier(0.23, 1, 0.32, 1) ${motionClass}`}
       style={{ 
         width: itemWidth,
@@ -72,12 +72,12 @@ const ProjectCard: React.FC<{
       </div>
       <div className="mt-auto pb-[var(--safe-bottom)]">
         <div 
-          className={`w-full overflow-hidden bg-[#E2E2E2] transition-all duration-700 ease-out shadow-sm ${project.aspectRatio} group-hover:brightness-[0.97] group-hover:shadow-md rounded-sm`}
+          className={`w-full overflow-hidden bg-[#E2E2E2] transition-all duration-700 ease-out shadow-sm group-hover:brightness-[0.97] group-hover:shadow-md rounded-sm`}
         >
           <img 
-            src={project.imgUrl} 
+            src={project.mainImage} 
             alt={project.title}
-            className={`w-full h-full object-cover grayscale transition-all duration-[1200ms] ease-in-out ${isMobile ? 'scale-100' : 'scale-105'} group-hover:scale-100 group-hover:grayscale-0`}
+            className={`w-full h-auto grayscale transition-all duration-[1200ms] ease-in-out ${isMobile ? 'scale-100' : 'scale-105'} group-hover:scale-100 group-hover:grayscale-0 block`}
             loading="lazy"
           />
         </div>
@@ -102,14 +102,14 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
         const query = `*[_type == "project"] | order(number asc)`;
         const data = await client.fetch(query);
         const formattedData = data.map((p: any) => ({
-          id: p._id,
+          _id: p._id,
           number: p.number || '',
           title: p.title || '',
           description: p.description || '',
           longDescription: p.longDescription || '',
-          aspectRatio: p.aspectRatio || 'aspect-[3/4]',
-          imgUrl: p.mainImage ? urlFor(p.mainImage).url() : '',
-          gallery: p.images ? p.images.map((img: any) => urlFor(img).url()) : []
+          aspectRatio: p.aspectRatio || '',
+          mainImage: p.mainImage ? urlFor(p.mainImage).url() : '',
+          images: p.images ? p.images.map((img: any) => urlFor(img).url()) : []
         }));
         setProjects(formattedData);
       } catch (error) {
@@ -120,7 +120,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
     fetchProjects();
   }, []);
 
-  const selectedProject = projects.find(p => p.id === selectedProjectId) || null;
+  const selectedProject = projects.find(p => p._id === selectedProjectId) || null;
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -164,6 +164,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
         <ProjectDetail 
           project={selectedProject} 
           isMobile={isMobile}
+          onBack={() => onSelectProject(null)}
         />
       )}
 
@@ -187,7 +188,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
 
           {projects.map((project, index) => (
             <ProjectCard 
-              key={project.id} 
+              key={project._id} 
               project={project} 
               index={index}
               isMobile={isMobile}
