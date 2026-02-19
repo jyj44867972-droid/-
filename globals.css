@@ -1,0 +1,173 @@
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.wght@700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+    font-family: 'GowunDodum';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
+:root {
+  --color-brand-orange: #FF5C28;
+  --color-brand-gray: #E2E2E2;
+  --color-bg-white: #fcfcfc;
+  --color-hero-bg: #F2F2F2;
+  
+  --grid-margin: 24px;
+  --grid-gutter: 20px;
+  --safe-bottom: 32px;
+}
+
+body {
+  font-family: 'Pretendard', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-bg-white);
+  color: #000;
+}
+
+/* Grid System */
+.main-grid {
+  display: grid;
+  column-gap: var(--grid-gutter);
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
+  width: 100%;
+}
+
+/* Mobile 6 columns */
+@media (max-width: 767px) {
+  :root {
+    --grid-margin: 15px;
+    --grid-gutter: 11px;
+    --safe-bottom: 34px;
+  }
+  .main-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Desktop 12 columns */
+@media (min-width: 768px) {
+  .main-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Global Animations */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite ease-in-out;
+}
+
+/* Refined Minimalist Transition Animations */
+@keyframes veil-in {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(4px); }
+}
+
+@keyframes veil-out {
+  from { opacity: 1; backdrop-filter: blur(4px); }
+  to { opacity: 0; backdrop-filter: blur(0px); }
+}
+
+.animate-veil-in {
+  animation: veil-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.animate-veil-out {
+  animation: veil-out 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Mobile Detail Overlay Animations */
+@keyframes detail-bg-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes detail-content-up {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes detail-bg-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes detail-content-down {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(50px); opacity: 0; }
+}
+
+.animate-detail-bg-in { animation: detail-bg-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+.animate-detail-content-up { animation: detail-content-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+.animate-detail-bg-out { animation: detail-bg-out 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+.animate-detail-content-down { animation: detail-content-down 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
