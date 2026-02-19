@@ -140,7 +140,7 @@ const AboutApp: React.FC = () => {
                 <h3 className="text-[30px] md:text-[40px] lg:text-[50px] font-medium text-[#E2E2E2] leading-[1.4] tracking-tight mb-8 md:mb-10 select-none whitespace-nowrap">
                   Jeong Ye Jin
                 </h3>
-                <p className="text-[15px] md:text-[14px] text-[#888] leading-[1.8] break-keep w-full">
+                <p className="text-[15px] md:text-[14px] text-[#888] font-light leading-[1.8] break-keep w-full">
                   안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, 
                   이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 디자이너 정예진입니다.
                 </p>

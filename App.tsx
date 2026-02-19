@@ -16,6 +16,24 @@ const App: React.FC = () => {
   const [transitionPhase, setTransitionPhase] = useState<'idle' | 'in' | 'out'>('idle');
   const [loadingPercent, setLoadingPercent] = useState(0);
 
+  // Sync state with URL hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as any;
+      const validViews = ['home', 'projects', 'graphic', 'about'];
+      if (validViews.includes(hash)) {
+        setView(hash);
+      } else if (!hash) {
+        setView('home');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange(); // Run on initial mount
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   const handleNavigate = (page: 'home' | 'projects' | 'graphic' | 'about') => {
     if (page === view || isTransitioning) return;
 
@@ -23,8 +41,7 @@ const App: React.FC = () => {
     setTransitionPhase('in');
     setLoadingPercent(0);
 
-    // Percentage counter logic
-    const duration = 600; // 0.6s for counting
+    const duration = 600; 
     const startTime = performance.now();
 
     const animateCounter = (currentTime: number) => {
@@ -41,7 +58,6 @@ const App: React.FC = () => {
 
     requestAnimationFrame(animateCounter);
 
-    // Phase In: 베일이 덮이고 숫자가 올라감
     setTimeout(() => {
       setView(page);
       window.location.hash = page;
@@ -49,7 +65,6 @@ const App: React.FC = () => {
       setSelectedProjectId(null);
       setTransitionPhase('out');
       
-      // Phase Out: 새로운 페이지 노출
       setTimeout(() => {
         setIsTransitioning(false);
         setTransitionPhase('idle');
@@ -63,7 +78,6 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-[#fcfcfc] overflow-hidden font-pretendard">
-      {/* Refined Minimalist Loading Overlay with Counter */}
       {isTransitioning && (
         <div 
           className={`fixed inset-0 z-[2000] flex items-center justify-center bg-white/95 backdrop-blur-sm pointer-events-auto
