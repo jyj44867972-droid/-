@@ -3,7 +3,7 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
 export const client = createClient({
-  projectId: 'import.meta.env.VITE_SANITY_PROJECT_ID', // Replace with your Sanity project ID
+  projectId: 'aoav5un7', // Replace with your Sanity project ID
   dataset: 'production',         // Replace with your dataset name
   useCdn: true,                  // `false` if you want to ensure fresh data
   apiVersion: '2023-05-03',      // Use a current date for API versioning
