@@ -210,7 +210,7 @@ const GraphicApp: React.FC = () => {
                       <h4 className="text-[13px] lg:text-[14px] font-bold text-[#111] mb-1 font-pretendard">
                         {item.title}
                       </h4>
-                      <p className="text-[11px] lg:text-[12px] text-[#555] leading-[1.5] break-keep font-pretendard">
+                      <p className="text-[11px] lg:text-[12px] text-[#555] leading-[1.5] break-words font-pretendard">
                         {item.description}
                       </p>
                     </div>
@@ -262,7 +262,7 @@ const GraphicApp: React.FC = () => {
                   <h4 className="text-[17px] font-bold text-white font-pretendard leading-tight">
                     {selectedItem.title}
                   </h4>
-                  <p className="text-[14px] text-white/60 leading-[1.6] break-keep font-pretendard mt-1.5">
+                  <p className="text-[14px] text-white/60 leading-[1.6] break-words font-pretendard mt-1.5">
                     {selectedItem.description}
                   </p>
                 </div>
