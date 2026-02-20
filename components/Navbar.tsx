@@ -92,12 +92,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
         transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)'
       };
 
-  // Determine width based on state and platform
   const getWidth = () => {
     if (!isExpanded) return '3px';
-    if (isProjectDetail) return '64px'; // Unified compact width for project detail
+    if (isProjectDetail) return '64px'; 
     if (isMobile) return 'calc(100vw - 30px)';
-    return '420px'; // Default expanded width for desktop
+    return '420px'; 
   };
 
   return (
@@ -105,18 +104,18 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
       className="fixed top-0 left-0 w-full z-[100] flex flex-col items-center pointer-events-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ height: isMobile ? '120px' : '80px' }} 
+      style={{ height: isMobile ? '70px' : '80px' }} 
     >
       <div 
         className={`
           flex items-center justify-center overflow-hidden whitespace-nowrap
           ${isExpanded 
-            ? `bg-white/80 backdrop-blur-lg px-2 md:px-10 py-3 h-[48px] border border-black/[0.05] shadow-[0_2px_10px_rgba(0,0,0,0.04)] rounded-sm` 
+            ? `bg-white/40 backdrop-blur-xl px-2 md:px-10 py-3 h-[48px] border border-black/[0.03] shadow-[0_2px_15px_rgba(0,0,0,0.02)] rounded-sm` 
             : 'bg-brand-orange w-[3px] h-[40px] mt-0 border-transparent shadow-none'}
         `}
         style={{
           ...containerStyle,
-          marginTop: isExpanded ? (isMobile ? '60px' : '32px') : '0',
+          marginTop: isExpanded ? (isMobile ? '11px' : '32px') : '0',
           width: getWidth()
         }}
       >

@@ -59,7 +59,7 @@ const AboutApp: React.FC = () => {
       <div className={`absolute inset-0 z-50 bg-brand-bg transition-all duration-700 ease-in-out md:hidden ${
         activeTab === null ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'
       }`}>
-        <div className="main-grid w-full h-full pt-[120px] pb-[40px]">
+        <div className="main-grid w-full h-full pt-[80px] pb-[40px]">
           <div className="col-span-6 flex flex-col justify-center h-full gap-[4vh]">
             {tabs.map((tab, index) => (
               <div 
@@ -87,7 +87,7 @@ const AboutApp: React.FC = () => {
         {isMobile && (
           <button 
             onClick={handleBack}
-            className="absolute top-[135px] left-[var(--grid-margin)] z-[110] flex items-center gap-1.5 text-[#888] active:text-brand-orange transition-colors"
+            className="absolute top-[80px] left-[var(--grid-margin)] z-[110] flex items-center gap-1.5 text-[#888] active:text-brand-orange transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -96,10 +96,9 @@ const AboutApp: React.FC = () => {
           </button>
         )}
 
-        <div className="main-grid w-full h-full pt-[160px] pb-[80px]">
-          
-          {/* 네비게이션 인덱스 영역 */}
-          <div className={`col-span-12 md:col-span-3 flex flex-col ${isMobile ? 'mt-16' : 'gap-16'}`}>
+        <div className="main-grid w-full h-full pt-[160px] pb-[80px] md:pt-[160px]">
+          {/* 모바일의 경우 content 영역의 pt를 조정 */}
+          <div className={`col-span-12 md:col-span-3 flex flex-col ${isMobile ? 'mt-[80px]' : 'gap-16'}`}>
             {tabs.map((tab, index) => {
               if (isMobile && activeTab !== index) return null;
 
@@ -179,12 +178,20 @@ const AboutApp: React.FC = () => {
               activeTab === 2 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-10 pointer-events-none absolute'
             }`}>
               <div className="flex flex-col gap-4 items-start text-left">
-                <span className="text-[20px] md:text-[28px] lg:text-[36px] font-bold text-[#E2E2E2] tracking-tighter leading-none break-all">
+                <a 
+                  href="https://www.instagram.com/yezin_archive/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[20px] md:text-[28px] lg:text-[36px] font-bold text-[#E2E2E2] tracking-tighter leading-none break-all hover:text-brand-orange transition-colors duration-300"
+                >
                   insta : @yezin_archive
-                </span>
-                <span className="text-[20px] md:text-[28px] lg:text-[36px] font-bold text-[#E2E2E2] tracking-tighter leading-none break-all">
+                </a>
+                <a 
+                  href="mailto:bbh7972@naver.com"
+                  className="text-[20px] md:text-[28px] lg:text-[36px] font-bold text-[#E2E2E2] tracking-tighter leading-none break-all hover:text-brand-orange transition-colors duration-300"
+                >
                   bbh7972@naver.com
-                </span>
+                </a>
               </div>
             </div>
 

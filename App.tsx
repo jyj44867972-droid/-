@@ -19,12 +19,20 @@ const App: React.FC = () => {
   // Sync state with URL hash
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as any;
+      const fullHash = window.location.hash.replace('#/', '');
+      const parts = fullHash.split('/');
+      const mainView = parts[0] as any;
+      const subId = parts[1] || null;
+
       const validViews = ['home', 'projects', 'graphic', 'about'];
-      if (validViews.includes(hash)) {
-        setView(hash);
-      } else if (!hash) {
+      
+      if (validViews.includes(mainView)) {
+        setView(mainView);
+        setSelectedProjectId(mainView === 'projects' ? subId : null);
+      } else if (!mainView) {
         setView('home');
+        setSelectedProjectId(null);
+        window.location.hash = '#/home';
       }
     };
 
@@ -35,8 +43,10 @@ const App: React.FC = () => {
   }, []);
 
   const handleNavigate = (page: 'home' | 'projects' | 'graphic' | 'about') => {
-    if (page === view || isTransitioning) return;
-
+    if (page === view && !selectedProjectId && isTransitioning) return;
+    // 만약 프로젝트 리스트에서 다시 프로젝트를 눌렀는데 이미 리스트라면 transition 생략 가능하지만, 
+    // 세부페이지에서 리스트로 나갈 때는 transition을 보여주는 것이 일관적임.
+    
     setIsTransitioning(true);
     setTransitionPhase('in');
     setLoadingPercent(0);
@@ -59,10 +69,9 @@ const App: React.FC = () => {
     requestAnimationFrame(animateCounter);
 
     setTimeout(() => {
-      setView(page);
-      window.location.hash = page;
+      // 해시를 변경하여 useEffect의 handleHashChange가 상태를 업데이트하게 함
+      window.location.hash = `#/${page}`;
       window.scrollTo(0, 0);
-      setSelectedProjectId(null);
       setTransitionPhase('out');
       
       setTimeout(() => {
@@ -72,8 +81,16 @@ const App: React.FC = () => {
     }, 800);
   };
 
+  const handleSelectProject = (id: string | null) => {
+    if (id) {
+      window.location.hash = `#/projects/${id}`;
+    } else {
+      window.location.hash = `#/projects`;
+    }
+  };
+
   const handleBackFromDetail = () => {
-    setSelectedProjectId(null);
+    handleSelectProject(null);
   };
 
   return (
@@ -106,7 +123,7 @@ const App: React.FC = () => {
           <main className="w-full h-full overflow-hidden">
             <ProjectApp 
               selectedProjectId={selectedProjectId} 
-              onSelectProject={setSelectedProjectId} 
+              onSelectProject={handleSelectProject} 
             />
           </main>
         ) : view === 'graphic' ? (

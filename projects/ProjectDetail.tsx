@@ -15,7 +15,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, isMobile, onBack
   }, [project]);
 
   return (
-    <div className={`absolute inset-0 z-[10] bg-white overflow-y-auto no-scrollbar flex flex-col font-pretendard project-detail-container ${isMobile ? 'pt-[120px]' : 'pt-[100px]'}`}>
+    <div className={`absolute inset-0 z-[10] bg-white overflow-y-auto no-scrollbar flex flex-col font-pretendard project-detail-container ${isMobile ? 'pt-[80px]' : 'pt-[100px]'}`}>
       
       {/* 닫기 버튼은 이제 Navbar의 뒤로가기 버튼으로 대체되었습니다. */}
 
