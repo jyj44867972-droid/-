@@ -162,7 +162,7 @@ const GraphicApp: React.FC = () => {
       >
         {/* Large canvas area to allow for 2D panning */}
         <div className="min-w-[300vw] min-h-[300vh] flex items-center justify-center p-[400px] md:p-[800px]">
-          <div ref={gridRef} className="grid grid-cols-5 gap-x-[80px] md:gap-x-[150px] lg:gap-x-[190px] gap-y-[40px] md:gap-y-[60px] lg:gap-y-[80px] w-max">
+          <div ref={gridRef} className="grid grid-cols-5 gap-x-[100px] md:gap-x-[180px] lg:gap-x-[240px] gap-y-[40px] md:gap-y-[60px] lg:gap-y-[80px] w-max">
             {items.map((item) => (
               <div
                 key={item.id}
