@@ -1,17 +1,24 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { client, urlFor } from '../sanity';
 
 // --- Hero Sub-component ---
-const Hero: React.FC = () => {
+interface HeroProps {
+  imageUrl: string | null;
+}
+
+const Hero: React.FC<HeroProps> = ({ imageUrl }) => {
+  const fallbackImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop';
+  
   return (
     <div className="relative w-full h-full overflow-hidden bg-brand-bg">
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-[2000ms] ease-out scale-105"
         style={{ 
-          backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2500&auto=format&fit=crop')`,
+          backgroundImage: `url('${imageUrl || fallbackImage}')`,
         }}
       />
-      {/* Texture Overlay */}
+      {/* Texture Overlay: 고급스러운 종이 질감을 살짝 얹어 디자인 완성도를 높임 */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-multiply">
         <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
       </div>
@@ -65,8 +72,24 @@ const IntroSection: React.FC = () => {
 const HomeApp: React.FC = () => {
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+  const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    // Sanity에서 홈 데이터를 가져옵니다. 
+    // Studio에서 'home' 타입에 'heroImage' 필드가 정의되어 있어야 합니다.
+    const fetchHomeData = async () => {
+      try {
+        const query = `*[_type == "home"][0]`;
+        const data = await client.fetch(query);
+        if (data && data.heroImage) {
+          setHeroImageUrl(urlFor(data.heroImage).url());
+        }
+      } catch (error) {
+        console.error("Failed to fetch home data from Sanity:", error);
+      }
+    };
+    fetchHomeData();
+
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -96,14 +119,10 @@ const HomeApp: React.FC = () => {
 
   return (
     <div className="relative w-full h-full">
-      {/* 
-          Fixed Home Footer Elements 
-          모바일 버전에서는 이미지와 동일하게 @2026/이름은 좌측, scroll은 우측 배치
-      */}
+      {/* Fixed Home Footer Elements */}
       <div className="fixed bottom-8 left-0 w-full z-50 pointer-events-none font-gowun text-brand-orange text-[16px] md:text-[13px] tracking-tight">
         <div className="main-grid items-end">
           {isMobile ? (
-            // Mobile Specific Layout (based on user image)
             <>
               <div className="col-span-3 text-left flex flex-col leading-tight">
                 <span>@2026</span>
@@ -119,7 +138,6 @@ const HomeApp: React.FC = () => {
               </div>
             </>
           ) : (
-            // Desktop Layout
             <>
               <div className="md:col-span-3 text-left">
                 <span>@2026</span>
@@ -142,7 +160,7 @@ const HomeApp: React.FC = () => {
 
       <main className="home-scroll-container snap-y snap-mandatory h-screen overflow-y-scroll no-scrollbar scroll-smooth">
         <section id="home-hero" className="snap-start w-full h-screen">
-          <Hero />
+          <Hero imageUrl={heroImageUrl} />
         </section>
         <section id="home-intro" className="snap-start w-full h-screen">
           <IntroSection />
