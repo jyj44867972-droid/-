@@ -162,7 +162,7 @@ const GraphicApp: React.FC = () => {
       >
         {/* Large canvas area to allow for 2D panning */}
         <div className="min-w-[300vw] min-h-[300vh] flex items-center justify-center p-[400px] md:p-[800px]">
-          <div ref={gridRef} className="grid grid-cols-5 gap-[160px] md:gap-[280px] lg:gap-[360px] w-max">
+          <div ref={gridRef} className="grid grid-cols-5 gap-x-[80px] md:gap-x-[150px] lg:gap-x-[190px] gap-y-[40px] md:gap-y-[60px] lg:gap-y-[80px] w-max">
             {items.map((item) => (
               <div
                 key={item.id}
@@ -194,7 +194,7 @@ const GraphicApp: React.FC = () => {
                 {/* Info Box - Appears to the right of the image on hover */}
                 {!isMobile && (
                   <div 
-                    className={`absolute left-full top-0 ml-4 md:ml-6 lg:ml-8 z-[100] transition-all duration-500 w-[140px] lg:w-[180px] pointer-events-none ${
+                    className={`absolute left-full top-0 ml-4 md:ml-6 lg:ml-8 z-[100] transition-all duration-500 w-[80px] md:w-[150px] lg:w-[190px] pointer-events-none ${
                       hoveredItem?.id === item.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                     }`}
                   >
