@@ -8,16 +8,16 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ imageUrl }) => {
-  const fallbackImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop';
-  
   return (
-    <div className="relative w-full h-full overflow-hidden bg-brand-bg">
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-[2000ms] ease-out scale-105"
-        style={{ 
-          backgroundImage: `url('${imageUrl || fallbackImage}')`,
-        }}
-      />
+    <div className="relative w-full h-full overflow-hidden bg-[#E2E2E2]">
+      {imageUrl && (
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-[2000ms] ease-out scale-105"
+          style={{ 
+            backgroundImage: `url('${imageUrl}')`,
+          }}
+        />
+      )}
       {/* Texture Overlay: 고급스러운 종이 질감을 살짝 얹어 디자인 완성도를 높임 */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-multiply">
         <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
@@ -85,12 +85,12 @@ const HomeApp: React.FC = () => {
           setHeroImageUrl(urlFor(data.heroImage).url());
         } else {
           // Fallback if data is empty
-          setHeroImageUrl('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop');
+          setHeroImageUrl(null);
         }
       } catch (error) {
         console.error("Failed to fetch home data from Sanity:", error);
         // Fallback on error
-        setHeroImageUrl('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop');
+        setHeroImageUrl(null);
       }
     };
     fetchHomeData();

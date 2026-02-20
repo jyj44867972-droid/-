@@ -18,8 +18,10 @@ const GraphicApp: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<GraphicItem | null>(null);
   const [isOverlayClosing, setIsOverlayClosing] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0, percentX: 0, percentY: 0 });
   
   const containerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
   const startY = useRef(0);
@@ -33,30 +35,40 @@ const GraphicApp: React.FC = () => {
         const query = `*[_type == "graphic"] | order(number desc)`;
         const data = await client.fetch(query);
         if (data && data.length > 0) {
-          const formatted = data.map((item: any) => ({
-            id: item._id,
-            number: item.number || '',
-            title: item.title || '',
-            description: item.description || '',
-            imgUrl: item.mainImage ? urlFor(item.mainImage).url() : '',
-            x: item.x || Math.floor(Math.random() * 100),
-            y: item.y || Math.floor(Math.random() * 100)
-          }));
+          const formatted = data.map((item: any, index: number) => {
+            const col = index % 5;
+            const row = Math.floor(index / 5);
+            const totalRows = Math.ceil(data.length / 5);
+            return {
+              id: item._id,
+              number: item.number || '',
+              title: item.title || '',
+              description: item.description || '',
+              imgUrl: item.mainImage ? urlFor(item.mainImage).url() : '',
+              x: (col / 4) * 100,
+              y: (row / (totalRows > 1 ? totalRows - 1 : 1)) * 100
+            };
+          });
           setItems(formatted);
         } else {
           throw new Error("No data");
         }
       } catch (e) {
         console.error("Failed to fetch graphics, using mock data:", e);
-        const mockGraphics: GraphicItem[] = Array.from({ length: 16 }).map((_, i) => ({
-          id: `g-${i}`,
-          number: (16 - i).toString().padStart(2, '0'),
-          title: `Graphic Study ${16 - i}`,
-          description: 'Experimental graphic design exploration focusing on form and composition.',
-          imgUrl: `https://picsum.photos/seed/graphic-${i}/800/800`,
-          x: Math.floor(Math.random() * 100),
-          y: Math.floor(Math.random() * 100)
-        }));
+        const mockGraphics: GraphicItem[] = Array.from({ length: 16 }).map((_, i) => {
+          const col = i % 5;
+          const row = Math.floor(i / 5);
+          const totalRows = Math.ceil(16 / 5);
+          return {
+            id: `g-${i}`,
+            number: (16 - i).toString().padStart(2, '0'),
+            title: `Graphic Study ${16 - i}`,
+            description: 'Experimental graphic design exploration focusing on form and composition.',
+            imgUrl: `https://picsum.photos/seed/graphic-${i}/800/800`,
+            x: (col / 4) * 100,
+            y: (row / (totalRows - 1)) * 100
+          };
+        });
         setItems(mockGraphics);
       }
     };
@@ -92,7 +104,24 @@ const GraphicApp: React.FC = () => {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current || !isDragging.current) return;
+    if (!containerRef.current || !gridRef.current) return;
+    
+    // Update mouse position for coordinates display relative to the grid
+    const gridRect = gridRef.current.getBoundingClientRect();
+    const xInGrid = e.clientX - gridRect.left;
+    const yInGrid = e.clientY - gridRect.top;
+    
+    const percentX = (xInGrid / gridRect.width) * 100;
+    const percentY = (yInGrid / gridRect.height) * 100;
+
+    setMousePos({ 
+      x: e.clientX, 
+      y: e.clientY,
+      percentX: Math.max(0, Math.min(100, Math.round(percentX))),
+      percentY: Math.max(0, Math.min(100, Math.round(percentY)))
+    });
+
+    if (!isDragging.current) return;
     
     e.preventDefault();
     const curX = e.pageX - containerRef.current.offsetLeft;
@@ -133,11 +162,11 @@ const GraphicApp: React.FC = () => {
       >
         {/* Large canvas area to allow for 2D panning */}
         <div className="min-w-[300vw] min-h-[300vh] flex items-center justify-center p-[400px] md:p-[800px]">
-          <div className="grid grid-cols-5 gap-[160px] md:gap-[220px] lg:gap-[280px] w-max">
+          <div ref={gridRef} className="grid grid-cols-5 gap-[160px] md:gap-[280px] lg:gap-[360px] w-max">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-col group items-center relative"
+                className="relative w-[80px] md:w-[150px] lg:w-[190px]"
                 onMouseEnter={() => !isMobile && setHoveredItem(item)}
                 onMouseLeave={() => !isMobile && setHoveredItem(null)}
                 onClick={() => {
@@ -147,7 +176,7 @@ const GraphicApp: React.FC = () => {
                   }
                 }}
               >
-                <div className="w-[80px] md:w-[150px] lg:w-[190px] h-auto bg-[#E2E2E2] overflow-hidden transition-all duration-500 group-hover:scale-[1.05] group-hover:shadow-2xl">
+                <div className="w-full h-auto bg-[#E2E2E2] overflow-hidden transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl cursor-pointer">
                   {item.imgUrl ? (
                     <img 
                       src={item.imgUrl} 
@@ -165,23 +194,23 @@ const GraphicApp: React.FC = () => {
                 {/* Info Box - Appears to the right of the image on hover */}
                 {!isMobile && (
                   <div 
-                    className={`absolute left-full top-0 ml-20 z-[100] transition-all duration-500 w-[280px] pointer-events-none ${
+                    className={`absolute left-full top-0 ml-4 md:ml-6 lg:ml-8 z-[100] transition-all duration-500 w-[140px] lg:w-[180px] pointer-events-none ${
                       hoveredItem?.id === item.id ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                     }`}
                   >
                     <div className="text-left pt-0 pb-2">
-                      <div className="flex items-baseline gap-3 mb-1">
-                        <span className="text-[42px] font-black text-[#E2E2E2] font-pretendard tracking-tighter leading-none">
+                      <div className="flex items-baseline gap-2 lg:gap-3 mb-1">
+                        <span className="text-[36px] lg:text-[42px] font-black text-[#E2E2E2] font-pretendard tracking-tighter leading-none">
                           {item.number}
                         </span>
-                        <span className="text-[10px] text-[#888] font-pretendard uppercase tracking-widest font-bold">
+                        <span className="text-[9px] lg:text-[10px] text-[#888] font-pretendard uppercase tracking-widest font-bold">
                           X:{Math.round(item.x)} Y:{Math.round(item.y)}
                         </span>
                       </div>
-                      <h4 className="text-[14px] font-bold text-[#111] mb-1 font-pretendard">
+                      <h4 className="text-[13px] lg:text-[14px] font-bold text-[#111] mb-1 font-pretendard">
                         {item.title}
                       </h4>
-                      <p className="text-[12px] text-[#555] leading-[1.6] break-keep font-pretendard max-w-[140px]">
+                      <p className="text-[11px] lg:text-[12px] text-[#555] leading-[1.5] break-keep font-pretendard">
                         {item.description}
                       </p>
                     </div>
@@ -193,7 +222,18 @@ const GraphicApp: React.FC = () => {
         </div>
       </div>
 
-      {/* Mouse Coordinates removed as per user request */}
+      {/* Mouse Coordinates */}
+      {!isMobile && !selectedItem && (
+        <div 
+          className="fixed z-[150] pointer-events-none text-[10px] font-bold text-[#FF5C28] font-pretendard"
+          style={{ 
+            left: mousePos.x + 15, 
+            top: mousePos.y + 15 
+          }}
+        >
+          X:{mousePos.percentX} Y:{mousePos.percentY}
+        </div>
+      )}
 
       {/* Overlay Detail */}
       {selectedItem && (
