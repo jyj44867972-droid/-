@@ -83,9 +83,14 @@ const HomeApp: React.FC = () => {
         const data = await client.fetch(query);
         if (data && data.heroImage) {
           setHeroImageUrl(urlFor(data.heroImage).url());
+        } else {
+          // Fallback if data is empty
+          setHeroImageUrl('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop');
         }
       } catch (error) {
         console.error("Failed to fetch home data from Sanity:", error);
+        // Fallback on error
+        setHeroImageUrl('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2500&auto=format&fit=crop');
       }
     };
     fetchHomeData();

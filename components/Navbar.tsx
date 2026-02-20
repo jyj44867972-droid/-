@@ -94,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
 
   const getWidth = () => {
     if (!isExpanded) return '3px';
-    if (isProjectDetail) return '64px'; 
+    if (isProjectDetail) return '48px'; 
     if (isMobile) return 'calc(100vw - 30px)';
     return '420px'; 
   };
@@ -110,7 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
         className={`
           flex items-center justify-center overflow-hidden whitespace-nowrap
           ${isExpanded 
-            ? `bg-white/40 backdrop-blur-xl px-2 md:px-10 py-3 h-[48px] border border-black/[0.03] shadow-[0_2px_15px_rgba(0,0,0,0.02)] rounded-sm` 
+            ? `bg-white/40 backdrop-blur-xl px-2 md:px-10 py-3 h-[48px] border border-black/[0.03] shadow-[0_2px_15px_rgba(0,0,0,0.02)] rounded-none` 
             : 'bg-brand-orange w-[3px] h-[40px] mt-0 border-transparent shadow-none'}
         `}
         style={{

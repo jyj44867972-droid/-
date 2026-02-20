@@ -39,9 +39,9 @@ const AboutApp: React.FC = () => {
    * 기본 계산값(0, 169, 338)에서 약 18px씩 위로(마이너스 방향) 보정했습니다.
    */
   const sectionOffsets = [
-    'mt-[-18px]',
-    'mt-[151px]',
-    'mt-[320px]',
+    'mt-[0px]',
+    'mt-[169px]',
+    'mt-[338px]',
   ];
 
   const handleTabClick = (index: number) => {
@@ -179,7 +179,7 @@ const AboutApp: React.FC = () => {
             }`}>
               <div className="flex flex-col gap-4 items-start text-left">
                 <a 
-                  href="https://www.instagram.com/yezin_archive/" 
+                  href="https://www.instagram.com/yzin_archive/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-[20px] md:text-[28px] lg:text-[36px] font-bold text-[#E2E2E2] tracking-tighter leading-none break-all hover:text-brand-orange transition-colors duration-300"

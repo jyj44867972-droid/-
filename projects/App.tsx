@@ -57,8 +57,8 @@ const ProjectCard: React.FC<{
         transitionDelay: isVisible ? `${index % 4 * 100}ms` : '0ms'
       }}
     >
-      {/* 텍스트 영역: mt 값을 늘려 아래로 조정 */}
-      <div className="flex flex-col text-left mt-[170px] md:mt-[160px] lg:mt-[180px] transition-transform duration-500 group-hover:translate-x-1 px-1">
+      {/* 텍스트 영역: 모바일에서 mt 값을 줄여 오버플로우 방지 */}
+      <div className="flex flex-col text-left mt-[140px] md:mt-[240px] lg:mt-[260px] transition-transform duration-500 group-hover:translate-x-1 px-1">
         <h2 
           className="text-[36px] md:text-[60px] lg:text-[84px] font-black text-[#E2E2E2] leading-none mb-3 select-none font-pretendard tracking-tighter ml-[-0.05em] pointer-events-none transition-colors duration-500 group-hover:text-brand-orange"
         >
@@ -71,9 +71,9 @@ const ProjectCard: React.FC<{
           {project.description}
         </p>
       </div>
-      <div className="mt-auto pb-[var(--safe-bottom)]">
+      <div className="mt-auto pb-[var(--safe-bottom)] shrink-0">
         <div 
-          className={`w-full overflow-hidden bg-[#E2E2E2] transition-all duration-700 ease-out shadow-sm group-hover:brightness-[0.97] group-hover:shadow-md rounded-sm`}
+          className={`w-full overflow-hidden bg-[#E2E2E2] transition-all duration-700 ease-out shadow-sm group-hover:brightness-[0.97] group-hover:shadow-md`}
         >
           <img 
             src={project.mainImage} 
@@ -102,19 +102,56 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
       try {
         const query = `*[_type == "project"] | order(number asc)`;
         const data = await client.fetch(query);
-        const formattedData = data.map((p: any) => ({
-          _id: p._id,
-          number: p.number || '',
-          title: p.title || '',
-          description: p.description || '',
-          longDescription: p.longDescription || '',
-          aspectRatio: p.aspectRatio || '',
-          mainImage: p.mainImage ? urlFor(p.mainImage).url() : '',
-          images: p.images ? p.images.map((img: any) => urlFor(img).url()) : []
-        }));
-        setProjects(formattedData);
+        if (data && data.length > 0) {
+          const formattedData = data.map((p: any) => ({
+            _id: p._id,
+            number: p.number || '',
+            title: p.title || '',
+            description: p.description || '',
+            longDescription: p.longDescription || '',
+            aspectRatio: p.aspectRatio || '',
+            mainImage: p.mainImage ? urlFor(p.mainImage).url() : '',
+            images: p.images ? p.images.map((img: any) => urlFor(img).url()) : []
+          }));
+          setProjects(formattedData);
+        } else {
+          throw new Error("No data");
+        }
       } catch (error) {
-        console.error("Failed to fetch projects from Sanity:", error);
+        console.error("Failed to fetch projects from Sanity, using mock data:", error);
+        const mockProjects: ProjectItem[] = [
+          {
+            _id: 'mock-1',
+            number: '01',
+            title: 'Minimalist Branding',
+            description: 'A clean branding project for a modern architecture firm.',
+            longDescription: 'This project focuses on the intersection of space and identity. We developed a visual language that reflects the firm\'s commitment to precision and sustainability.',
+            aspectRatio: '16/9',
+            mainImage: 'https://picsum.photos/seed/p1/1200/800',
+            images: ['https://picsum.photos/seed/p1-1/1200/800', 'https://picsum.photos/seed/p1-2/1200/800']
+          },
+          {
+            _id: 'mock-2',
+            number: '02',
+            title: 'Editorial Design',
+            description: 'Magazine layout design with a focus on typography and white space.',
+            longDescription: 'Exploring the limits of grid systems in editorial contexts. This publication features experimental layouts that challenge traditional reading patterns.',
+            aspectRatio: '3/4',
+            mainImage: 'https://picsum.photos/seed/p2/800/1200',
+            images: ['https://picsum.photos/seed/p2-1/800/1200']
+          },
+          {
+            _id: 'mock-3',
+            number: '03',
+            title: 'Digital Experience',
+            description: 'Interactive web experience for a creative agency.',
+            longDescription: 'A highly interactive portfolio site that uses motion and depth to tell the story of the agency\'s creative process.',
+            aspectRatio: '1/1',
+            mainImage: 'https://picsum.photos/seed/p3/1000/1000',
+            images: ['https://picsum.photos/seed/p3-1/1000/1000']
+          }
+        ];
+        setProjects(mockProjects);
       }
     };
     fetchProjects();
@@ -176,7 +213,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
           {!isMobile && (
             <div className="shrink-0 h-full flex flex-col pointer-events-none" style={{ width: leftOffset }}>
                {/* 소개 문구 영역: mt 값을 늘려 아래로 조정 */}
-               <div className="pl-[var(--grid-margin)] mt-[160px] md:mt-[150px] lg:mt-[180px]" style={{ width: `calc(3 * ${colWidthDesktop} + 2 * var(--grid-gutter))` }}>
+               <div className="pl-[var(--grid-margin)] mt-[220px] md:mt-[240px] lg:mt-[260px]" style={{ width: `calc(3 * ${colWidthDesktop} + 2 * var(--grid-gutter))` }}>
                   <p className="text-[12px] md:text-[13px] text-[#888] font-normal leading-[1.6] break-keep text-left font-pretendard">
                     정교한 기획과 감각적인 시각화로<br />
                     완성된 프로젝트 아카이브입니다.
