@@ -110,7 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
         className={`
           flex items-center justify-center overflow-hidden whitespace-nowrap
           ${isExpanded 
-            ? `bg-white/40 backdrop-blur-xl px-2 md:px-10 py-3 h-[48px] border border-black/[0.03] shadow-[0_2px_15px_rgba(0,0,0,0.02)] rounded-none` 
+            ? `bg-white/40 backdrop-blur-xl ${isProjectDetail ? 'p-0' : 'px-2 md:px-10 py-3'} h-[48px] border border-black/[0.03] shadow-[0_2px_15px_rgba(0,0,0,0.02)] rounded-none` 
             : 'bg-brand-orange w-[3px] h-[40px] mt-0 border-transparent shadow-none'}
         `}
         style={{
@@ -126,12 +126,12 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
             : 'opacity-0 translate-y-2 duration-200 delay-0 pointer-events-none'}
         `}>
           {isProjectDetail ? (
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center w-full h-full">
               <button 
                 onClick={onBack}
-                className="flex items-center justify-center text-brand-orange hover:scale-110 transition-transform duration-300"
+                className="flex items-center justify-center text-brand-orange hover:scale-110 transition-transform duration-300 w-full h-full"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
               </button>

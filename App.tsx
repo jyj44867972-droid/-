@@ -82,11 +82,40 @@ const App: React.FC = () => {
   };
 
   const handleSelectProject = (id: string | null) => {
-    if (id) {
-      window.location.hash = `#/projects/${id}`;
-    } else {
-      window.location.hash = `#/projects`;
-    }
+    setIsTransitioning(true);
+    setTransitionPhase('in');
+    setLoadingPercent(0);
+
+    const duration = 600; 
+    const startTime = performance.now();
+
+    const animateCounter = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const currentPercent = Math.floor(progress * 100);
+      setLoadingPercent(currentPercent);
+      if (progress < 1) requestAnimationFrame(animateCounter);
+    };
+
+    requestAnimationFrame(animateCounter);
+
+    setTimeout(() => {
+      if (id) {
+        window.location.hash = `#/projects/${id}`;
+      } else {
+        // Use replace to prevent back-button loop
+        const url = new URL(window.location.href);
+        url.hash = `#/projects`;
+        window.location.replace(url.href);
+      }
+      window.scrollTo(0, 0);
+      setTransitionPhase('out');
+      
+      setTimeout(() => {
+        setIsTransitioning(false);
+        setTransitionPhase('idle');
+      }, 500);
+    }, 800);
   };
 
   const handleBackFromDetail = () => {
