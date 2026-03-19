@@ -237,8 +237,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
               className="absolute top-[15vh] left-[var(--grid-margin)] z-10 pointer-events-none"
             >
               <h1 className="text-[30px] md:text-[50px] lg:text-[70px] font-black text-[#111] font-pretendard tracking-tighter leading-[1.1]">
-                insta : @yezin_archive<br />
-                bbh7972@naver.com
+              
               </h1>
             </motion.div>
           )}

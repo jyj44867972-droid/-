@@ -62,7 +62,7 @@ const ProjectListSection: React.FC<{
   onSelectProject?: (id: string | null) => void 
 }> = ({ projects, onSelectProject }) => {
   return (
-    <div className="main-grid bg-[#fcfcfc] h-screen pt-[160px] pb-[100px] font-pretendard relative">
+    <div className="main-grid bg-[#fcfcfc] h-screen pt-[100px] pb-[100px] font-pretendard relative">
       {/* Name: 5th grid from right (Col 8) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

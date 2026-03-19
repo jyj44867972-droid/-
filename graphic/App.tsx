@@ -199,14 +199,6 @@ const GraphicApp: React.FC = () => {
                     }`}
                   >
                     <div className="text-left pt-0 pb-2">
-                      <div className="flex items-baseline gap-2 lg:gap-3 mb-1">
-                        <span className="text-[36px] lg:text-[42px] font-black text-[#E2E2E2] font-pretendard tracking-tighter leading-none">
-                          {item.number}
-                        </span>
-                        <span className="text-[9px] lg:text-[10px] text-[#888] font-pretendard uppercase tracking-widest font-bold">
-                          X:{Math.round(item.x)} Y:{Math.round(item.y)}
-                        </span>
-                      </div>
                       <h4 className="text-[13px] lg:text-[14px] font-bold text-[#111] mb-1 font-pretendard">
                         {item.title}
                       </h4>
