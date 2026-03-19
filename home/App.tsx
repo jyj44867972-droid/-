@@ -24,10 +24,10 @@ const IntroSection: React.FC = () => {
 
   return (
     <div 
-      className="main-grid bg-[#fcfcfc] relative overflow-hidden h-screen"
+      className="main-grid bg-[#D8D8D8] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ perspective: '1500px' }}
+      style={{ perspective: '1500px', backgroundImage: 'url(/path/to/your/image.jpg)' }}
     >
       <div 
         className="col-span-9 col-start-3 md:col-start-3 md:col-span-9 flex flex-col justify-center transition-transform duration-500 ease-out will-change-transform font-pretendard"
