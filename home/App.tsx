@@ -7,6 +7,23 @@ import { motion } from 'framer-motion';
 // --- Intro Sub-component (Section 1) ---
 const IntroSection: React.FC = () => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBackground = async () => {
+      try {
+        // Try fetching a 'home' document, or fallback to a project image
+        const query = `*[_type == "home"][0]{"image": backgroundImage.asset->url} || *[_type == "project"][0]{"image": mainImage.asset->url}`;
+        const data = await client.fetch(query);
+        if (data && data.image) {
+          setBackgroundImage(urlFor(data.image).url());
+        }
+      } catch (error) {
+        console.error("Failed to fetch background image:", error);
+      }
+    };
+    fetchBackground();
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
@@ -27,7 +44,10 @@ const IntroSection: React.FC = () => {
       className="main-grid bg-[#D8D8D8] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ perspective: '1500px', backgroundImage: 'url(/path/to/your/image.jpg)' }}
+      style={{ 
+        perspective: '1500px', 
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' 
+      }}
     >
       <div 
         className="col-span-9 col-start-3 md:col-start-3 md:col-span-9 flex flex-col justify-center transition-transform duration-500 ease-out will-change-transform font-pretendard"
