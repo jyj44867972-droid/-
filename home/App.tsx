@@ -12,11 +12,13 @@ const IntroSection: React.FC = () => {
   useEffect(() => {
     const fetchBackground = async () => {
       try {
-        // Try fetching a 'home' document, or fallback to a project image
-        const query = `*[_type == "home"][0]{"image": backgroundImage.asset->url} || *[_type == "project"][0]{"image": mainImage.asset->url}`;
+        // Fetch the home document and get the backgroundImage object
+        const query = `*[_type == "home"][0]{backgroundImage} || *[_type == "project"][0]{"backgroundImage": mainImage}`;
         const data = await client.fetch(query);
-        if (data && data.image) {
-          setBackgroundImage(urlFor(data.image).url());
+        
+        if (data && data.backgroundImage) {
+          const imageUrl = urlFor(data.backgroundImage).url();
+          setBackgroundImage(imageUrl);
         }
       } catch (error) {
         console.error("Failed to fetch background image:", error);
