@@ -12,13 +12,20 @@ const IntroSection: React.FC = () => {
   useEffect(() => {
     const fetchBackground = async () => {
       try {
-        // Fetch the home document and get the backgroundImage object
-        const query = `*[_type == "home"][0]{backgroundImage} || *[_type == "project"][0]{"backgroundImage": mainImage}`;
+        // Fetch the home document specifically for the background image
+        const query = `*[_type == "home"][0]{backgroundImage}`;
         const data = await client.fetch(query);
         
         if (data && data.backgroundImage) {
           const imageUrl = urlFor(data.backgroundImage).url();
           setBackgroundImage(imageUrl);
+        } else {
+          // Fallback to first project image if home background is not set
+          const fallbackQuery = `*[_type == "project"][0]{mainImage}`;
+          const fallbackData = await client.fetch(fallbackQuery);
+          if (fallbackData && fallbackData.mainImage) {
+            setBackgroundImage(urlFor(fallbackData.mainImage).url());
+          }
         }
       } catch (error) {
         console.error("Failed to fetch background image:", error);
@@ -43,7 +50,7 @@ const IntroSection: React.FC = () => {
 
   return (
     <div 
-      className="main-grid bg-transparent relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
+      className="main-grid bg-[#111] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ 
@@ -51,18 +58,23 @@ const IntroSection: React.FC = () => {
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' 
       }}
     >
+      {/* Background Overlay for readability */}
+      {backgroundImage && (
+        <div className="absolute inset-0 bg-black/40 z-0" />
+      )}
+      
       <div 
-        className="col-span-12 md:col-span-10 md:col-start-2 flex flex-col justify-center items-center text-center md:items-start md:text-left transition-transform duration-500 ease-out will-change-transform font-pretendard"
+        className="col-span-12 md:col-span-10 md:col-start-2 flex flex-col justify-center items-center text-center md:items-start md:text-left transition-transform duration-500 ease-out will-change-transform font-pretendard relative z-10"
         style={{ 
           transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) rotate(-10deg)`,
           transformStyle: 'preserve-3d'
         }}
       >
         <h1 
-          className="text-[14px] md:text-[24px] lg:text-[16px] font-medium tracking-[0.9em] text-[#E0E0E0] select-none break-keep leading-[1.8] opacity-80"
+          className="text-[14px] md:text-[24px] lg:text-[16px] font-medium tracking-[1em] text-[#E0E0E0] select-none break-keep leading-[1.8] opacity-80"
         >
-          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, <br className="hidden md:block" />
-          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 <br className="hidden md:block" />
+          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고,
+          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 
           디자이너 정예진입니다.
         </h1>
       </div>
@@ -108,8 +120,8 @@ const ProjectListSection: React.FC<{
           className="text-[13px] text-[#333] break-keep font-light"
           style={{ lineHeight: 1.6 }}
         >
-          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, 
-          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 
+          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, <br className="hidden md:block" />
+          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 <br className="hidden md:block" />
           디자이너 정예진입니다.
         </p>
       </motion.div>
