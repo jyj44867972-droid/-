@@ -134,7 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
               </button>
             </div>
           ) : (
-            <div className="main-grid w-full items-center">
+            <div className="main-grid w-full items-start">
               <div className="col-start-1 col-span-6 md:col-span-4 flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start gap-4">
                 <button 
                   onClick={() => onNavigate('home')}

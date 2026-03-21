@@ -189,8 +189,8 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
   const colWidthDesktop = `calc((100vw - (2 * var(--grid-margin)) - (11 * var(--grid-gutter))) / 12)`;
   const colWidthMobile = `calc((100vw - (2 * var(--grid-margin)) - (5 * var(--grid-gutter))) / 6)`;
   
-  const itemWidthDesktop = `calc(5 * ${colWidthDesktop} + 4 * var(--grid-gutter))`;
-  const itemWidthMobile = `calc(4 * ${colWidthMobile} + 3 * var(--grid-gutter))`;
+  const itemWidthDesktop = `calc(3 * ${colWidthDesktop} + 2 * var(--grid-gutter))`;
+  const itemWidthMobile = `calc(3 * ${colWidthMobile} + 2 * var(--grid-gutter))`;
   const itemWidth11Col = isMobile 
     ? `calc(5 * ${colWidthMobile} + 4 * var(--grid-gutter))` 
     : `calc(11 * ${colWidthDesktop} + 10 * var(--grid-gutter))`;
@@ -198,7 +198,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
   // 정확한 텍스트 영역 높이 계산 (여백 포함)
   const textHeightScroll = isMobile ? '70px' : '85px';
   
-  const scrollButtonsBottom = `calc(2vh + ${textHeightScroll} + (${isMobile ? itemWidthMobile : itemWidthDesktop}) * 9 / 16 + 5px)`;
+  const scrollButtonsBottom = `calc(2vh + ${textHeightScroll} + (${isMobile ? itemWidthMobile : itemWidthDesktop}) * 9 / 16 + 25px)`;
   
   const leftOffset = isMobile 
     ? 'var(--grid-margin)' 
@@ -288,7 +288,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                 {/* 뷰 모드 토글 아이콘 버튼: 싱글 모드일 때 스크롤되도록 내부에 배치 */}
                 <div 
                   className="absolute left-[var(--grid-margin)] z-[60] flex flex-col items-start gap-1 pointer-events-auto"
-                  style={{ top: '30vh' }}
+                  style={{ top: '28vh' }}
                 >
                   <div className="flex items-center gap-4">
                     <button 
@@ -324,9 +324,9 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                 </div>
 
                 {projects.map((p, index) => (
-                  <div key={p._id} className={`w-full border-b border-[#ddd] flex group ${index === 0 ? 'border-t' : ''}`}>
+                  <div key={p._id} className={`w-full flex group`}>
                     {/* Left Section: Text */}
-                    <div className="w-1/2 flex flex-col pl-[var(--grid-margin)] pr-[var(--grid-gutter)] py-6 border-r border-[#ddd]">
+                    <div className="w-1/2 flex flex-col pl-[var(--grid-margin)] pr-[var(--grid-gutter)] py-6">
                       <div className="flex justify-between items-start">
                         <h2 className="text-[15px] md:text-[17px] font-medium text-[#111] font-pretendard tracking-tighter leading-none">
                           {p.title}
