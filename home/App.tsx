@@ -19,13 +19,6 @@ const IntroSection: React.FC = () => {
         if (data && data.backgroundImage) {
           const imageUrl = urlFor(data.backgroundImage).url();
           setBackgroundImage(imageUrl);
-        } else {
-          // Fallback to first project image if home background is not set
-          const fallbackQuery = `*[_type == "project"][0]{mainImage}`;
-          const fallbackData = await client.fetch(fallbackQuery);
-          if (fallbackData && fallbackData.mainImage) {
-            setBackgroundImage(urlFor(fallbackData.mainImage).url());
-          }
         }
       } catch (error) {
         console.error("Failed to fetch background image:", error);

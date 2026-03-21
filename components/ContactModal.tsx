@@ -21,7 +21,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="main-grid w-full max-w-7xl px-4"
+        className="main-grid w-full max-w-7xl px-4 font-gowun"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="col-span-12 text-2xl font-light text-black text-center">
