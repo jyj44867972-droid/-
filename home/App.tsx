@@ -7,21 +7,21 @@ import { motion } from 'framer-motion';
 // --- Intro Sub-component (Section 1) ---
 const IntroSection: React.FC = () => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [heroImage, setHeroImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBackground = async () => {
       try {
-        // Fetch the home document specifically for the background image
-        const query = `*[_type == "home"][0]{backgroundImage}`;
+        // Fetch the home document specifically for the hero image
+        const query = `*[_type == "home"][0]{heroImage}`;
         const data = await client.fetch(query);
         
-        if (data && data.backgroundImage) {
-          const imageUrl = urlFor(data.backgroundImage).url();
-          setBackgroundImage(imageUrl);
+        if (data && data.heroImage) {
+          const imageUrl = urlFor(data.heroImage).url();
+          setHeroImage(imageUrl);
         }
       } catch (error) {
-        console.error("Failed to fetch background image:", error);
+        console.error("Failed to fetch hero image:", error);
       }
     };
     fetchBackground();
@@ -48,11 +48,11 @@ const IntroSection: React.FC = () => {
       onMouseLeave={handleMouseLeave}
       style={{ 
         perspective: '1500px', 
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' 
+        backgroundImage: heroImage ? `url(${heroImage})` : 'none' 
       }}
     >
       {/* Background Overlay for readability */}
-      {backgroundImage && (
+      {heroImage && (
         <div className="absolute inset-0 bg-black/40 z-0" />
       )}
       
@@ -88,39 +88,41 @@ const ProjectListSection: React.FC<{
   onSelectProject?: (id: string | null) => void 
 }> = ({ projects, onSelectProject }) => {
   return (
-    <div className="main-grid bg-[#fcfcfc] h-screen pt-[240px] pb-[40px] md:pb-[100px] font-pretendard relative flex flex-col">
-      {/* Name: 5th grid from right (Col 8) */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-        className="col-start-8 col-span-1 flex items-baseline gap-2 whitespace-nowrap -mt-6"
-      >
-        <span className="text-[13px] font-light text-[#111]">정예진</span>
-        <span className="text-[13px] font-light text-[#888]">Jeong Ye Jin</span>
-      </motion.div>
-
-      {/* Description: 4th grid from right (Col 9) */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-        className="col-start-9 col-span-4 mt-4"
-      >
-        <p 
-          className="text-[13px] text-[#333] break-keep font-light"
-          style={{ lineHeight: 1.6 }}
+    <div className="bg-[#fcfcfc] h-screen pt-[240px] pb-[40px] md:pb-[100px] font-pretendard relative flex flex-col px-[var(--grid-margin)]">
+      <div className="grid grid-cols-6 md:grid-cols-12 gap-[var(--grid-gutter)] w-full">
+        {/* Name: 5th grid from right (Col 8) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="col-start-4 md:col-start-8 col-span-3 md:col-span-1 flex items-baseline gap-2 whitespace-nowrap -mt-6"
         >
-          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, <br className="hidden md:block" />
-          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 <br className="hidden md:block" />
-          디자이너 정예진입니다.
-        </p>
-      </motion.div>
+          <span className="text-[13px] font-light text-[#111]">정예진</span>
+          <span className="text-[13px] font-light text-[#888]">Jeong Ye Jin</span>
+        </motion.div>
+
+        {/* Description: 4th grid from right (Col 9) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+          className="col-start-1 md:col-start-9 col-span-6 md:col-span-4 mt-4 md:mt-4"
+        >
+          <p 
+            className="text-[13px] text-[#333] break-keep font-light"
+            style={{ lineHeight: 1.6 }}
+          >
+            안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, <br className="hidden md:block" />
+            이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 <br className="hidden md:block" />
+            디자이너 정예진입니다.
+          </p>
+        </motion.div>
+      </div>
 
       {/* Projects List */}
-      <div className="col-span-12 mt-auto">
+      <div className="mt-auto">
         <div className="flex flex-col border-t border-[#eee]">
           {projects.map((project, index) => (
             <motion.button 
@@ -130,18 +132,18 @@ const ProjectListSection: React.FC<{
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.05, ease: [0.23, 1, 0.32, 1] }}
               onClick={() => onSelectProject?.(project._id)}
-              className="group main-grid items-center py-1.5 border-b border-[#eee] transition-all duration-300 hover:bg-[#f9f9f9] text-left w-full !px-0"
+              className="group grid grid-cols-6 md:grid-cols-12 gap-[var(--grid-gutter)] items-center py-1.5 border-b border-[#eee] transition-all duration-300 hover:bg-[#f9f9f9] text-left w-full"
             >
               <span className="col-span-1 text-[14px] font-light text-brand-orange tabular-nums">
                 {project.number || (index + 1).toString().padStart(2, '0')}
               </span>
-              <span className="col-start-3 col-span-3 text-[14px] font-light text-[#111] tracking-tight">
+              <span className="col-start-2 md:col-start-3 col-span-2 md:col-span-3 text-[14px] font-light text-[#111] tracking-tight">
                 {project.title}
               </span>
-              <span className="col-start-6 col-span-6 text-[14px] text-[#888] font-light truncate">
+              <span className="col-start-4 md:col-start-6 col-span-2 md:col-span-6 text-[14px] text-[#888] font-light truncate">
                 {project.description}
               </span>
-              <div className="col-start-12 flex justify-end">
+              <div className="col-start-6 md:col-start-12 flex justify-end">
                 <ArrowRight className="w-4 h-4 text-[#ccc] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brand-orange" />
               </div>
             </motion.button>
