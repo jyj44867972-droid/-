@@ -61,7 +61,7 @@ const IntroSection: React.FC = () => {
         }}
       >
         <h1 
-          className="text-[12px] md:text-[24px] lg:text-[16px] font-light tracking-[1em] text-[#C8C8C8] select-none break-keep leading-[1.8] opacity-80 max-w-lg mx-auto text-center"
+          className="text-[12px] md:text-[24px] lg:text-[16px] font-light tracking-[1em] text-[#C8C8C8] select-none break-keep leading-[1.8] opacity-80 max-w-l mx-auto "
         >
           안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고,
           이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 
