@@ -43,7 +43,7 @@ const IntroSection: React.FC = () => {
 
   return (
     <div 
-      className="main-grid bg-[#111] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
+      className="main-grid bg-[#fcfcfc] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ 
@@ -51,10 +51,7 @@ const IntroSection: React.FC = () => {
         backgroundImage: heroImage ? `url(${heroImage})` : 'none' 
       }}
     >
-      {/* Background Overlay for readability */}
-      {heroImage && (
-        <div className="absolute inset-0 bg-black/40 z-0" />
-      )}
+      {/* Background Overlay removed for full brightness */}
       
       <div 
         className="col-span-12 md:col-span-10 md:col-start-2 flex flex-col justify-center items-center text-center md:items-start md:text-left transition-transform duration-500 ease-out will-change-transform font-pretendard relative z-10"
@@ -64,7 +61,7 @@ const IntroSection: React.FC = () => {
         }}
       >
         <h1 
-          className="text-[14px] md:text-[24px] lg:text-[16px] font-medium tracking-[1em] text-[#E0E0E0] select-none break-keep leading-[1.8] opacity-80"
+          className="text-[12px] md:text-[24px] lg:text-[16px] font-medium tracking-[1em] text-[#888] select-none break-keep leading-[1.8] opacity-80"
         >
           안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고,
           이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 
