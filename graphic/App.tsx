@@ -242,14 +242,6 @@ const GraphicApp: React.FC = () => {
           >
             <div className="w-full flex flex-col items-center">
               <div className="w-full text-left mb-4">
-                <div className="flex items-baseline gap-3 leading-none">
-                   <span className="text-[42px] font-black text-white font-pretendard tracking-tighter">
-                     {selectedItem.number}
-                   </span>
-                   <span className="text-[10px] text-white/40 font-pretendard uppercase tracking-widest font-bold">
-                     X:{Math.round(selectedItem.x)} Y:{Math.round(selectedItem.y)}
-                   </span>
-                </div>
                 <div className="mt-1">
                   <h4 className="text-[17px] font-bold text-white font-pretendard leading-tight">
                     {selectedItem.title}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 interface NavbarProps {
-  currentView: 'home' | 'projects' | 'graphic' | 'about';
-  onNavigate: (view: 'home' | 'projects' | 'graphic' | 'about') => void;
+  currentView: 'home' | 'projects' | 'graphic' | 'about' | 'contact';
+  onNavigate: (view: 'home' | 'projects' | 'graphic' | 'about' | 'contact') => void;
   isProjectDetail?: boolean;
   onBack?: () => void;
 }
@@ -67,35 +67,32 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
     };
   }, [currentView]);
 
-  const isExpanded = isHovered || (
-    isMobile 
-      ? !isScrolling 
-      : (
-          (currentView === 'graphic' || currentView === 'about') 
-            ? isMouseActive 
-            : !isScrolling
-        )
+  const isExpanded = isMobile || isHovered || (
+    (currentView === 'graphic' || currentView === 'about') 
+      ? isMouseActive 
+      : !isScrolling
   );
 
   const containerStyle = isExpanded 
     ? {
-        transitionProperty: 'background-color, border-color, width, height, padding, margin, border-radius, box-shadow',
-        transitionDuration: '400ms, 400ms, 600ms, 600ms, 600ms, 600ms, 600ms, 600ms',
-        transitionDelay: '0ms, 0ms, 400ms, 400ms, 400ms, 400ms, 400ms, 400ms',
-        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)'
+        transitionProperty: 'background-color, border-color, width, height, padding, margin, border-radius, box-shadow, transform',
+        transitionDuration: '400ms, 400ms, 600ms, 600ms, 600ms, 600ms, 600ms, 600ms, 600ms',
+        transitionDelay: '0ms, 0ms, 400ms, 400ms, 400ms, 400ms, 400ms, 400ms, 400ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        transform: 'translateY(0)'
       }
     : {
-        transitionProperty: 'width, height, padding, margin, border-radius, box-shadow, background-color, border-color',
-        transitionDuration: '600ms, 600ms, 600ms, 600ms, 600ms, 600ms, 400ms, 400ms',
-        transitionDelay: '0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 600ms, 600ms',
-        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)'
+        transitionProperty: 'width, height, padding, margin, border-radius, box-shadow, background-color, border-color, transform',
+        transitionDuration: '600ms, 600ms, 600ms, 600ms, 600ms, 600ms, 400ms, 400ms, 600ms',
+        transitionDelay: '0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 600ms, 600ms, 0ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        transform: 'translateY(-100%)'
       };
 
   const getWidth = () => {
-    if (!isExpanded) return '3px';
+    if (!isExpanded) return '48px'; // Match w-12
     if (isProjectDetail) return '64px'; 
-    if (isMobile) return 'calc(100vw - 30px)';
-    return '420px'; 
+    return '100vw'; 
   };
 
   return (
@@ -103,29 +100,30 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
       className="fixed top-0 left-0 w-full z-[100] flex flex-col items-center pointer-events-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ height: isMobile ? '70px' : '80px' }} 
+      style={{ height: isMobile ? '60px' : (isExpanded ? '140px' : '40px') }} 
     >
       <div 
         className={`
-          flex items-center justify-center overflow-hidden whitespace-nowrap
+          flex items-center justify-center overflow-hidden whitespace-nowrap transition-all duration-500
           ${isExpanded 
-            ? `bg-[#F9F9F9] backdrop-blur-xl px-2 md:px-10 py-3 h-[48px] rounded-none` 
-            : 'bg-brand-orange w-[3px] h-[40px] mt-0 border-transparent shadow-none'}
+            ? `bg-white/80 backdrop-blur-md px-0 py-0 h-full rounded-none` 
+            : 'bg-brand-orange w-12 h-1 mt-2 rounded-none opacity-50 hover:opacity-100'}
         `}
         style={{
           ...containerStyle,
           marginTop: '0',
-          width: getWidth()
+          width: getWidth(),
+          transform: isExpanded ? 'translateY(0)' : 'translateY(0)'
         }}
       >
         <div className={`
-          flex transition-all font-gowun w-full justify-center
+          flex transition-all font-gowun w-full
           ${isExpanded 
-            ? 'opacity-100 translate-y-0 duration-500 delay-[1000ms]' 
-            : 'opacity-0 translate-y-2 duration-200 delay-0 pointer-events-none'}
+            ? 'opacity-100 translate-y-0 duration-500 delay-[400ms]' 
+            : 'opacity-0 -translate-y-10 duration-200 delay-0 pointer-events-none'}
         `}>
           {isProjectDetail ? (
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center w-full h-[48px]">
               <button 
                 onClick={onBack}
                 className="flex items-center justify-center text-brand-orange hover:scale-110 transition-transform duration-300 rounded-none"
@@ -136,23 +134,31 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
               </button>
             </div>
           ) : (
-            <div className="flex gap-6 md:gap-10">
-              <button 
-                onClick={() => onNavigate('home')}
-                className={`text-[16px] md:text-[13px] transition-opacity hover:opacity-100 ${currentView === 'home' ? 'text-brand-orange opacity-100' : 'text-brand-orange opacity-60'}`}
-              >Home</button>
-              <button 
-                onClick={() => onNavigate('projects')}
-                className={`text-[16px] md:text-[13px] transition-opacity hover:opacity-100 ${currentView === 'projects' ? 'text-brand-orange opacity-100' : 'text-brand-orange opacity-60'}`}
-              >Projects</button>
-              <button 
-                onClick={() => onNavigate('graphic')}
-                className={`text-[16px] md:text-[13px] transition-opacity hover:opacity-100 ${currentView === 'graphic' ? 'text-brand-orange opacity-100' : 'text-brand-orange opacity-60'}`}
-              >Graphic</button>
-              <button 
-                onClick={() => onNavigate('about')}
-                className={`text-[16px] md:text-[13px] transition-opacity hover:opacity-100 ${currentView === 'about' ? 'text-brand-orange opacity-100' : 'text-brand-orange opacity-60'}`}
-              >Contact</button>
+            <div className="main-grid w-full items-center">
+              <div className="col-start-1 col-span-6 md:col-span-4 flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start gap-4">
+                <button 
+                  onClick={() => onNavigate('home')}
+                  className={`text-left text-[15px] md:text-[16px] font-medium transition-opacity hover:opacity-100 text-brand-orange ${currentView === 'home' ? 'opacity-100' : 'opacity-100'}`}
+                >Home</button>
+                <button 
+                  onClick={() => onNavigate('projects')}
+                  className={`text-left text-[15px] md:text-[16px] font-medium transition-opacity hover:opacity-100 text-brand-orange ${currentView === 'projects' ? 'opacity-100' : 'opacity-100'}`}
+                >Projects</button>
+                <button 
+                  onClick={() => onNavigate('graphic')}
+                  className={`text-left text-[15px] md:text-[16px] font-medium transition-opacity hover:opacity-100 text-brand-orange ${currentView === 'graphic' ? 'opacity-100' : 'opacity-100'}`}
+                >graphic</button>
+                <button 
+                  onClick={() => onNavigate('contact' as any)}
+                  className={`md:hidden text-left text-[15px] md:text-[16px] font-medium transition-opacity hover:opacity-100 text-brand-orange opacity-100`}
+                >Contact</button>
+              </div>
+              <div className="hidden md:flex md:col-start-7 col-span-1 justify-start">
+                <button 
+                  onClick={() => onNavigate('contact' as any)}
+                  className={`text-left text-[18px] md:text-[16px] font-medium transition-opacity hover:opacity-100 text-brand-orange opacity-100`}
+                >Contact</button>
+              </div>
             </div>
           )}
         </div>

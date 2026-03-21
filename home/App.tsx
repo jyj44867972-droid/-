@@ -43,7 +43,7 @@ const IntroSection: React.FC = () => {
 
   return (
     <div 
-      className="main-grid bg-[#D8D8D8] relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
+      className="main-grid bg-transparent relative overflow-hidden h-screen bg-cover bg-center bg-no-repeat"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ 
@@ -52,18 +52,17 @@ const IntroSection: React.FC = () => {
       }}
     >
       <div 
-        className="col-span-9 col-start-3 md:col-start-3 md:col-span-9 flex flex-col justify-center transition-transform duration-500 ease-out will-change-transform font-pretendard"
+        className="col-span-12 md:col-span-10 md:col-start-2 flex flex-col justify-center items-center text-center md:items-start md:text-left transition-transform duration-500 ease-out will-change-transform font-pretendard"
         style={{ 
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) rotate(14deg)`,
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) rotate(-10deg)`,
           transformStyle: 'preserve-3d'
         }}
       >
         <h1 
-          className="text-sm md:text-lg lg:text-xl font-normal tracking-[0.7em] text-[#D8D8D8] select-none break-keep transition-colors duration-500 hover:text-brand-orange"
-          style={{ lineHeight: 2.25 }}
+          className="text-[14px] md:text-[24px] lg:text-[16px] font-medium tracking-[0.9em] text-[#E0E0E0] select-none break-keep leading-[1.8] opacity-80"
         >
-          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, 
-          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 
+          안녕하세요. 저는 탄탄한 기획을 바탕으로 아이디어를 확장하고, <br className="hidden md:block" />
+          이를 시각적으로 정확하고 감각 있게 담아내기 위해 꾸준히 탐구하는 <br className="hidden md:block" />
           디자이너 정예진입니다.
         </h1>
       </div>
@@ -84,7 +83,7 @@ const ProjectListSection: React.FC<{
   onSelectProject?: (id: string | null) => void 
 }> = ({ projects, onSelectProject }) => {
   return (
-    <div className="main-grid bg-[#fcfcfc] h-screen pt-[100px] pb-[100px] font-pretendard relative">
+    <div className="main-grid bg-[#fcfcfc] h-screen pt-[240px] pb-[40px] md:pb-[100px] font-pretendard relative flex flex-col">
       {/* Name: 5th grid from right (Col 8) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -149,7 +148,10 @@ const ProjectListSection: React.FC<{
 };
 
 // --- Main Home Component ---
-const HomeApp: React.FC<{ onSelectProject?: (id: string | null) => void }> = ({ onSelectProject }) => {
+const HomeApp: React.FC<{ 
+  onSelectProject?: (id: string | null) => void,
+  onScroll?: (isScrolled: boolean) => void
+}> = ({ onSelectProject, onScroll }) => {
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
@@ -201,6 +203,10 @@ const HomeApp: React.FC<{ onSelectProject?: (id: string | null) => void }> = ({ 
       
       const newOpacity = Math.max(0, 1 - (scrollY / (windowHeight * 0.4)));
       setScrollOpacity(newOpacity);
+      
+      if (onScroll) {
+        onScroll(scrollY > 50);
+      }
     };
 
     if (scrollContainer) {
@@ -217,45 +223,6 @@ const HomeApp: React.FC<{ onSelectProject?: (id: string | null) => void }> = ({ 
 
   return (
     <div className="relative w-full h-full">
-      {/* Fixed Home Footer Elements */}
-      <div className="fixed bottom-8 left-0 w-full z-50 pointer-events-none font-gowun text-brand-orange text-[16px] md:text-[13px] tracking-tight">
-        <div className="main-grid items-end">
-          {isMobile ? (
-            <>
-              <div className="col-span-3 text-left flex flex-col leading-tight">
-                <span>@2026</span>
-                <span className="mt-1">Jeong Yejin</span>
-              </div>
-              <div 
-                className="col-span-3 text-right transition-opacity duration-300 ease-out"
-                style={{ opacity: scrollOpacity }}
-              >
-                <div className="animate-bounce-slow">
-                  <span>scroll ↓</span>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="md:col-span-3 text-left">
-                <span>@2026</span>
-              </div>
-              <div 
-                className="md:col-start-6 md:col-span-2 flex justify-center transition-opacity duration-300 ease-out"
-                style={{ opacity: scrollOpacity }}
-              >
-                <div className="flex flex-col items-center animate-bounce-slow">
-                  <span>scroll ↓</span>
-                </div>
-              </div>
-              <div className="md:col-start-10 md:col-span-3 text-right">
-                <span>Jeong Yejin</span>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
       <main className="home-scroll-container snap-y snap-mandatory h-screen overflow-y-scroll no-scrollbar scroll-smooth">
         <section id="home-intro" className="snap-start w-full h-screen">
           <IntroSection />

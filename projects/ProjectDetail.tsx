@@ -20,7 +20,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, isMobile, onBack
       {/* 닫기 버튼은 이제 Navbar의 뒤로가기 버튼으로 대체되었습니다. */}
 
       <div className={`main-grid pb-20 ${isMobile ? 'px-0' : ''}`}>
-        <div className={`flex flex-col ${isMobile ? 'col-span-6' : 'col-start-3 col-span-8'}`}>
+        <div className={`flex flex-col ${isMobile ? 'col-span-6' : 'col-start-4 col-span-6'}`}>
           <div className="w-full">
             <img 
               src={project.mainImage} 

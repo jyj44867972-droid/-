@@ -9,9 +9,10 @@ import AboutApp from './about/App';
 import ContactModal from './components/ContactModal';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'home' | 'projects' | 'graphic' | 'about'>('home');
+  const [view, setView] = useState<'home' | 'projects' | 'graphic' | 'about' | 'contact'>('home');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isHomeScrolled, setIsHomeScrolled] = useState(false);
   
   // Transition states
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -26,13 +27,13 @@ const App: React.FC = () => {
       const mainView = parts[0] as any;
       const subId = parts[1] || null;
 
-      const validViews = ['home', 'projects', 'graphic', 'about'];
+      const validViews = ['home', 'projects', 'graphic', 'about', 'contact'];
       
       if (validViews.includes(mainView)) {
-        if (mainView === 'about') {
+        if (mainView === 'contact') {
           setIsContactOpen(true);
           // Keep previous view or default to home
-          setView(view === 'about' ? 'home' : view);
+          setView(view === 'contact' ? 'home' : view);
         } else {
           setIsContactOpen(false);
           setView(mainView);
@@ -51,10 +52,10 @@ const App: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [view]);
 
-  const handleNavigate = (page: 'home' | 'projects' | 'graphic' | 'about') => {
-    if (page === 'about') {
+  const handleNavigate = (page: 'home' | 'projects' | 'graphic' | 'about' | 'contact') => {
+    if (page === 'contact') {
       setIsContactOpen(true);
-      window.location.hash = '#/about';
+      window.location.hash = '#/contact';
       return;
     }
     
@@ -165,7 +166,10 @@ const App: React.FC = () => {
       
       <div className="w-full h-screen overflow-hidden">
         {view === 'home' ? (
-          <HomeApp onSelectProject={handleSelectProject} />
+          <HomeApp 
+            onSelectProject={handleSelectProject} 
+            onScroll={(scrolled) => setIsHomeScrolled(scrolled)}
+          />
         ) : view === 'projects' ? (
           <main className="w-full h-full overflow-hidden">
             <ProjectApp 
@@ -184,7 +188,7 @@ const App: React.FC = () => {
         )}
       </div>
 
-      <Footer />
+      <Footer currentView={view} isScrolled={isHomeScrolled} />
     </div>
   );
 };

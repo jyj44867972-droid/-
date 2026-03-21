@@ -192,15 +192,13 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
   const itemWidthDesktop = `calc(5 * ${colWidthDesktop} + 4 * var(--grid-gutter))`;
   const itemWidthMobile = `calc(4 * ${colWidthMobile} + 3 * var(--grid-gutter))`;
   const itemWidth11Col = isMobile 
-    ? `calc(6 * ${colWidthMobile} + 5 * var(--grid-gutter))` 
+    ? `calc(5 * ${colWidthMobile} + 4 * var(--grid-gutter))` 
     : `calc(11 * ${colWidthDesktop} + 10 * var(--grid-gutter))`;
 
   // 정확한 텍스트 영역 높이 계산 (여백 포함)
   const textHeightScroll = isMobile ? '70px' : '85px';
-  const textHeightSingle = '140px';
   
-  const scrollButtonsBottom = `calc(2vh + ${textHeightScroll} + (${itemWidthDesktop}) * 9 / 16 + 15px)`;
-  const singleButtonsBottom = `calc(2vh + ${textHeightSingle} + (${itemWidth11Col}) * 9 / 16 + 15px)`;
+  const scrollButtonsBottom = `calc(2vh + ${textHeightScroll} + (${isMobile ? itemWidthMobile : itemWidthDesktop}) * 9 / 16 + 5px)`;
   
   const leftOffset = isMobile 
     ? 'var(--grid-margin)' 
@@ -245,7 +243,7 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
 
         <div 
           ref={scrollContainerRef}
-          className="flex h-full overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth project-scroll-container overscroll-behavior-x-contain"
+          className={`flex h-full no-scrollbar scroll-smooth project-scroll-container overscroll-behavior-x-contain ${viewMode === 'scroll' ? 'overflow-x-auto overflow-y-hidden' : 'overflow-x-hidden overflow-y-auto'}`}
         >
           <AnimatePresence mode="wait">
             {viewMode === 'scroll' ? (
@@ -257,8 +255,11 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                 transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
                 className="flex h-full"
               >
-                {/* 시작 여백: 인스타 텍스트와 동일한 위치에서 시작하도록 var(--grid-margin) 사용 */}
-                <div className="shrink-0 w-[var(--grid-margin)] h-full pointer-events-none" />
+                {/* 시작 여백: 인스타 텍스트와 동일한 위치에서 시작하도록 var(--grid-margin) 사용. 모바일에서는 버튼과의 겹침 방지를 위해 한 칸 띄움 */}
+                <div 
+                  className="shrink-0 h-full pointer-events-none" 
+                  style={{ width: isMobile ? `calc(var(--grid-margin) + ${colWidthMobile} + var(--grid-gutter))` : 'var(--grid-margin)' }} 
+                />
 
                 <div className="flex items-end pb-[2vh] h-full">
                   {projects.map((project, index) => (
@@ -282,52 +283,91 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -40 }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-                className="w-full h-full flex justify-end overflow-y-auto no-scrollbar pt-[15vh]"
+                className="w-full flex flex-col pt-[35vh] relative"
               >
-                <div className="flex flex-col gap-[15vh] px-[var(--grid-margin)]" style={{ width: itemWidth11Col }}>
-                  {projects.map((p) => (
-                    <div key={p._id} className="w-full flex flex-col items-start">
+                {/* 뷰 모드 토글 아이콘 버튼: 싱글 모드일 때 스크롤되도록 내부에 배치 */}
+                <div 
+                  className="absolute left-[var(--grid-margin)] z-[60] flex flex-col items-start gap-1 pointer-events-auto"
+                  style={{ top: '30vh' }}
+                >
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setViewMode('scroll');
+                      }}
+                      className="transition-all p-1 text-[#ccc] hover:text-[#111]"
+                      title="Grid View"
+                    >
+                      <div className="flex flex-row gap-[3px]">
+                        <div className="w-[1px] h-[18px] bg-current" />
+                        <div className="w-[1px] h-[18px] bg-current" />
+                        <div className="w-[1px] h-[18px] bg-current" />
+                      </div>
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setViewMode('single');
+                      }}
+                      className="transition-all p-1 text-brand-orange"
+                      title="Single View"
+                    >
+                      <div className="relative w-[18px] h-[18px] flex items-center justify-center">
+                        <div className="absolute w-full h-[1px] bg-current" />
+                        <div className="absolute w-[1px] h-full bg-current" />
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {projects.map((p, index) => (
+                  <div key={p._id} className={`w-full border-b border-[#ddd] flex group ${index === 0 ? 'border-t' : ''}`}>
+                    {/* Left Section: Text */}
+                    <div className="w-1/2 flex flex-col pl-[var(--grid-margin)] pr-[var(--grid-gutter)] py-6 border-r border-[#ddd]">
+                      <div className="flex justify-between items-start">
+                        <h2 className="text-[15px] md:text-[17px] font-medium text-[#111] font-pretendard tracking-tighter leading-none">
+                          {p.title}
+                        </h2>
+                        <span className="text-[15px] md:text-[17px] font-medium text-brand-orange font-pretendard tabular-nums leading-none">
+                          {p.number}
+                        </span>
+                      </div>
+                      <p className="text-[11px] md:text-[12px] text-[#888] font-pretendard mt-2 max-w-[300px] leading-relaxed">
+                        {p.description}
+                      </p>
+                    </div>
+                    
+                    {/* Right Section: Image */}
+                    <div className="w-1/2 py-6">
                       <div 
-                        className="w-full aspect-video bg-[#E2E2E2] overflow-hidden cursor-pointer shadow-sm"
+                        className="w-full aspect-video bg-[#E2E2E2] overflow-hidden cursor-pointer shadow-sm relative"
                         onClick={() => onSelectProject(p._id)}
                       >
                         <img 
                           src={p.mainImage} 
                           alt={p.title}
-                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                         />
                       </div>
-                      
-                      <div className="w-full flex justify-between items-start mt-8">
-                        <div className="flex flex-col">
-                          <h2 className="text-[18px] md:text-[22px] font-medium text-[#111] font-pretendard tracking-tighter leading-none">
-                            {p.title}
-                          </h2>
-                          <p className="text-[12px] md:text-[13px] text-[#888] font-pretendard mt-4 max-w-[500px] leading-relaxed">
-                            {p.description}
-                          </p>
-                        </div>
-                        <span className="text-[20px] md:text-[24px] font-medium text-brand-orange font-pretendard tabular-nums leading-none">
-                          {p.number}
-                        </span>
-                      </div>
                     </div>
-                  ))}
-                  {/* 마지막 이미지가 버튼 라인까지 올라오게 하기 위한 스페이서 */}
-                  <div className="h-[100vh] shrink-0" />
-                </div>
+                  </div>
+                ))}
+                {/* Bottom spacer */}
+                <div className="h-[20vh] shrink-0" />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* 뷰 모드 토글 아이콘 버튼: 사진 바로 위 (왼쪽) 배치 */}
-        {!selectedProject && (
+        {/* 뷰 모드 토글 아이콘 버튼: 그리드 모드(scroll)일 때만 고정 위치에 표시 */}
+        {!selectedProject && viewMode === 'scroll' && (
           <div 
-            className="absolute left-[var(--grid-margin)] z-50 flex flex-col items-start gap-1 pointer-events-auto"
+            className="absolute left-[var(--grid-margin)] z-[60] flex flex-col items-start gap-1 pointer-events-auto"
             style={{ 
-              top: viewMode === 'scroll' ? 'auto' : '15vh',
-              bottom: viewMode === 'scroll' ? scrollButtonsBottom : 'auto'
+              bottom: scrollButtonsBottom
             }}
           >
             <div className="flex items-center gap-4">
@@ -337,13 +377,13 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                   e.stopPropagation();
                   setViewMode('scroll');
                 }}
-                className={`transition-all ${viewMode === 'scroll' ? 'text-brand-orange' : 'text-[#ccc] hover:text-[#111]'}`}
-                title="Scroll View"
+                className="transition-all p-1 text-brand-orange"
+                title="Grid View"
               >
-                <div className="flex gap-[2px]">
-                  <div className="w-[2px] h-[18px] bg-current" />
-                  <div className="w-[2px] h-[18px] bg-current" />
-                  <div className="w-[2px] h-[18px] bg-current" />
+                <div className="flex flex-row gap-[3px]">
+                  <div className="w-[1px] h-[18px] bg-current" />
+                  <div className="w-[1px] h-[18px] bg-current" />
+                  <div className="w-[1px] h-[18px] bg-current" />
                 </div>
               </button>
               <button 
@@ -352,12 +392,12 @@ const ProjectApp: React.FC<ProjectAppProps> = ({ selectedProjectId, onSelectProj
                   e.stopPropagation();
                   setViewMode('single');
                 }}
-                className={`transition-all ${viewMode === 'single' ? 'text-brand-orange' : 'text-[#ccc] hover:text-[#111]'}`}
+                className="transition-all p-1 text-[#ccc] hover:text-[#111]"
                 title="Single View"
               >
-                <div className="relative w-[18px] h-[18px]">
-                  <div className="absolute top-1/2 left-0 w-full h-[2px] bg-current -translate-y-1/2" />
-                  <div className="absolute top-0 left-1/2 w-[2px] h-full bg-current -translate-x-1/2" />
+                <div className="relative w-[18px] h-[18px] flex items-center justify-center">
+                  <div className="absolute w-full h-[1px] bg-current" />
+                  <div className="absolute w-[1px] h-full bg-current" />
                 </div>
               </button>
             </div>
