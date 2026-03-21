@@ -90,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
       };
 
   const getWidth = () => {
-    if (!isExpanded) return '48px'; // Match w-12
+    if (!isExpanded) return '2px'; 
     if (isProjectDetail) return '64px'; 
     return '100vw'; 
   };
@@ -107,7 +107,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, isProjectDetai
           flex items-center justify-center overflow-hidden whitespace-nowrap transition-all duration-500
           ${isExpanded 
             ? `bg-white/80 backdrop-blur-md px-0 py-0 h-full rounded-none` 
-            : 'bg-brand-orange w-12 h-1 mt-2 rounded-none opacity-50 hover:opacity-100'}
+            : 'bg-brand-orange w-[2px] h-8 mt-2 rounded-none opacity-50 hover:opacity-100'}
         `}
         style={{
           ...containerStyle,

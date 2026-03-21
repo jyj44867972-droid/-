@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { client, urlFor } from '../sanity';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Intro Sub-component (Section 1) ---
 const IntroSection: React.FC = () => {
@@ -155,6 +155,13 @@ const ProjectListSection: React.FC<{
 };
 
 // --- Main Home Component ---
+interface TrailLetter {
+  id: number;
+  char: string;
+  x: number;
+  y: number;
+}
+
 const HomeApp: React.FC<{ 
   onSelectProject?: (id: string | null) => void,
   onScroll?: (isScrolled: boolean) => void
@@ -162,6 +169,40 @@ const HomeApp: React.FC<{
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [trail, setTrail] = useState<TrailLetter[]>([]);
+  const letters = "jeongyejin".split("");
+  const letterIndexRef = useRef(0);
+  const lastPosRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      const dist = Math.hypot(e.clientX - lastPosRef.current.x, e.clientY - lastPosRef.current.y);
+      
+      // Increased distance threshold for "disjointed" feel
+      if (dist > 80) {
+        const newLetter: TrailLetter = {
+          id: Date.now(),
+          char: letters[letterIndexRef.current],
+          x: e.clientX,
+          y: e.clientY
+        };
+        
+        setTrail(prev => [...prev.slice(-12), newLetter]);
+        letterIndexRef.current = (letterIndexRef.current + 1) % letters.length;
+        lastPosRef.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => window.removeEventListener('mousemove', handleGlobalMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTrail(prev => prev.filter(item => Date.now() - item.id < 1200));
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -189,7 +230,7 @@ const HomeApp: React.FC<{
           { _id: 'mock-1', number: '01', title: '프로젝트 명', description: '프로젝트 설명' },
           { _id: 'mock-2', number: '02', title: '웹사이트 리뉴얼', description: '기존 웹사이트 UI/UX 개선' },
           { _id: 'mock-3', number: '03', title: '모바일 앱 개발', description: '사용자 친화적인 앱 인터페이스 설계' },
-          { _id: 'mock-4', number: '04', title: '이커머스 플랫폼 구축', description: '온라인 쇼핑몰 시스템 통합' },
+          { _id: 'mock-4', number: '04', title: '이커머스 플랫폼 구축', description: '온라인 쇼핑몰 통합' },
           { _id: 'mock-5', number: '05', title: '소셜 미디어 캠페인', description: '브랜드 인지도 상승을 위한 전략' },
         ];
         setProjects(mockProjects);
@@ -230,6 +271,23 @@ const HomeApp: React.FC<{
 
   return (
     <div className="relative w-full h-full">
+      {/* Mouse Trail Letters - Global to HomeApp */}
+      <AnimatePresence>
+        {trail.map((letter) => (
+          <motion.div
+            key={letter.id}
+            initial={{ opacity: 0, scale: 0.5, x: letter.x, y: letter.y }}
+            animate={{ opacity: 1, scale: 1, x: letter.x, y: letter.y }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.4, ease: "backOut" }}
+            className="fixed pointer-events-none z-[2000] text-brand-orange font-gowun text-[28px] font-bold"
+            style={{ left: -14, top: -14 }} // Center the larger text roughly
+          >
+            {letter.char}
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
       <main className="home-scroll-container snap-y snap-mandatory h-screen overflow-y-scroll no-scrollbar scroll-smooth">
         <section id="home-intro" className="snap-start w-full h-screen">
           <IntroSection />
